@@ -8,12 +8,9 @@ import math
 
 # Return the euclidean distance between start and end
 # start: int[2], end: int[2]
-
-
 def euclidean_distance(start: List[int], end: List[int]) -> float:
     return math.sqrt((start[0]-end[0])*(start[0]-end[0]) + (start[1]-end[1])*(start[1]-end[1]))
 
-# Vertical distance + Horizontal distance
 
 
 # A cell for use in the A* pathfinding algorithm
@@ -37,8 +34,6 @@ class Cell:
         return self.position == other.position
 
 # Represents colors in a way readable to pygame
-
-
 class Color(Enum):
     WHITE = pygame.Color(255, 255, 255),
     BLACK = pygame.Color(0, 0, 0),

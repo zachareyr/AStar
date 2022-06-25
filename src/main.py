@@ -1,3 +1,4 @@
+from gc import callbacks
 import sys
 import pygame
 import numpy as np
@@ -5,11 +6,14 @@ from enum import Enum
 from typing import Tuple, List
 import math
 
-
 # Return the euclidean distance between start and end
 # start: int[2], end: int[2]
+
+
 def euclidean_distance(start: List[int], end: List[int]) -> float:
     return math.sqrt((start[0]-end[0])*(start[0]-end[0]) + (start[1]-end[1])*(start[1]-end[1]))
+
+# Vertical distance + Horizontal distance
 
 
 # A cell for use in the A* pathfinding algorithm
@@ -32,8 +36,9 @@ class Cell:
     def __eq__(self, other) -> bool:
         return self.position == other.position
 
-
 # Represents colors in a way readable to pygame
+
+
 class Color(Enum):
     WHITE = pygame.Color(255, 255, 255),
     BLACK = pygame.Color(0, 0, 0),
@@ -285,6 +290,9 @@ class Board:
             print(f"Failed to run pathfinding. No {0} location",
                   self.start if self.start is None else self.end)
             return 1
+        if (self.path_drawn):
+            self.remove_paths(message=False)
+
         print("Running pathfinding")
 
         # An 'open array' for cells that are open to being added
@@ -355,6 +363,7 @@ class Board:
         print("Failed to draw path. No path found")
 
     # Resets the board
+
     def reset_board(self):
         print("Resetting board")
         self.board = np.zeros((self.height, self.width), dtype=int)
@@ -364,7 +373,6 @@ class Board:
         self.placing_start = False
         self.path_drawn = False
 
-    # Places the start
     def place_start(self):
         # Don't place it if there is already a start
         if self.start != None:
@@ -375,8 +383,8 @@ class Board:
         self.placing_end = False
         self.placing_start = True
 
-    # Places the end
     def place_end(self):
+
         # Don't place it if there is already an end
         if self.end != None:
             print("End already placed")
@@ -394,7 +402,6 @@ class Board:
             return BOARD_STATES.END.value[0]
         return BOARD_STATES.ON.value[0]
 
-    # Toggles the ability of the algorithm to move diagonally
     def toggle_diagonal_movement(self):
         self.diagonal = not self.diagonal
         print("Diagonal movement {0}".format(
